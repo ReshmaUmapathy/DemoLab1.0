@@ -2,7 +2,14 @@ node('master') {
 	stage ('checkout code'){
 		checkout scm
 	}
-	
+	stage ('Notification'){
+		//slackSend color: 'good', message: 'Deployment Sucessful'
+		emailext (
+		      subject: "Job Completed",
+		      body: "Jenkins Pipeline Job for Maven Build got completed !!!",
+		      to: "riaumapathy@gmail.com"
+		    )
+	}
 	stage ('Build'){
 		sh "mvn clean install -Dmaven.test.skip=true"
 	}
@@ -21,13 +28,5 @@ node('master') {
 	
 	stage ('Deployment'){
 		//sh 'cp target/*.war /opt/tomcat8/webapps'
-	}
-	stage ('Notification'){
-		//slackSend color: 'good', message: 'Deployment Sucessful'
-		emailext (
-		      subject: "Job Completed",
-		      body: "Jenkins Pipeline Job for Maven Build got completed !!!",
-		      to: "riaumapathy@gmail.com"
-		    )
 	}
 }
